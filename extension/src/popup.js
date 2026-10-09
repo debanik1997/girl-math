@@ -16,6 +16,14 @@
 
   const $ = (id) => document.getElementById(id);
   const money = (n) => "$" + n.toFixed(2);
+  const esc = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[c]));
 
   function savingOf(promo, price) {
     if (promo.valueType === "percent") return (price * promo.value) / 100;
@@ -60,19 +68,28 @@
     const lines = [];
     if (code)
       lines.push({
-        label: `${code.label} (${code.code})`,
+        kind: "code",
+        chip: "promo",
+        label: code.label,
+        sub: code.exclusions || `apply ${code.code}`,
         amount: codeSaving,
         note: code.exclusions,
       });
     if (cashback)
       lines.push({
-        label: `${cashback.label} (${cashback.value}%)`,
+        kind: "cashback",
+        chip: "cashback",
+        label: cashback.label,
+        sub: cashback.exclusions || "via cashback portal",
         amount: cashbackSaving,
         note: cashback.exclusions,
       });
     if (bundle)
       lines.push({
-        label: `Bundle: ${bundle.title} — ${bundle.dealLabel}`,
+        kind: "bundle",
+        chip: "bundle",
+        label: `Bundle: ${bundle.title}`,
+        sub: `${bundle.dealLabel} · you pay ${money(bundleCost)}`,
         amount: bundleSaving,
         note: `You pay ${money(bundleCost)} for it`,
       });
@@ -153,16 +170,20 @@
     linesEl.innerHTML = "";
     const base = document.createElement("div");
     base.className = "line";
-    base.innerHTML = `<span>Item price</span><span class="num">${money(
-      product.price
-    )}</span>`;
+    base.innerHTML = `<span class="chip base">list price</span>
+      <span class="desc"><span class="main">${esc(
+        product.title.slice(0, 40)
+      )}</span></span>
+      <span class="num">${money(product.price)}</span>`;
     linesEl.appendChild(base);
     for (const ln of r.lines) {
       const d = document.createElement("div");
       d.className = "line saving";
-      d.innerHTML = `<span>${ln.label}</span><span class="num">−${money(
-        ln.amount
-      )}</span>`;
+      d.innerHTML = `<span class="chip ${ln.kind}">${ln.chip}</span>
+        <span class="desc"><span class="main">${esc(ln.label)}</span>${
+        ln.sub ? `<span class="sub">${esc(ln.sub)}</span>` : ""
+      }</span>
+        <span class="num">−${money(ln.amount)}</span>`;
       linesEl.appendChild(d);
     }
     const tot = document.createElement("div");

@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>girl math — redesign preview</title>
+  <style>
+:root {
+  --pink: #e75480;
+  --pink-deep: #c63f66;
+  --pink-soft: #fff0f5;
+  --ink: #241b25;
+  --muted: #9a8b99;
+  --paper: #fbf7f9;
+  --line: #f2dbe4;
+  --green: #16803c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 380px;
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app { padding: 0 0 14px; }
+
+/* ---------- header ---------- */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-deep) 100%);
+  color: #fff;
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+
+.logo {
+  font-size: 26px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.brand-text h1 {
+  font-size: 18px;
+  margin: 0;
+  letter-spacing: -0.4px;
+  font-weight: 800;
+}
+
+.brand-text p {
+  margin: 1px 0 0;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.proto {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  padding: 3px 10px;
+  opacity: 0.9;
+}
+
+/* ---------- cards ---------- */
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin: 12px 12px 0;
+  box-shadow: 0 2px 10px rgba(198, 63, 102, 0.06);
+}
+
+h2 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.hint {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+/* ---------- result (hero) ---------- */
+.result {
+  text-align: center;
+  background: linear-gradient(160deg, #fff 0%, var(--pink-soft) 100%);
+  padding: 18px 16px;
+}
+
+.result-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.result-price {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin: 2px 0 4px;
+}
+
+.result-price.free { color: var(--pink); }
+
+.result-sub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 290px;
+  margin: 0 auto;
+}
+
+/* ---------- product ---------- */
+.product { padding: 12px 16px; }
+
+.product-title {
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.merchant-chip {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pink-deep);
+  background: var(--pink-soft);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.price { font-size: 14px; font-weight: 700; }
+
+/* ---------- math lines ---------- */
+.line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #f7eef2;
+}
+
+.line:last-child { border-bottom: none; }
+
+.chip {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 3px 7px;
+  color: #fff;
+  min-width: 66px;
+  text-align: center;
+}
+
+.chip.base { background: #b9aeb8; }
+.chip.code { background: #8b5cf6; }
+.chip.cashback { background: #0ea5e9; }
+.chip.bundle { background: #f59e0b; }
+
+.line .desc { flex: 1; min-width: 0; }
+
+.line .desc .main {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.line .desc .sub {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.line .num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.line.saving .num { color: var(--green); }
+
+.line.total {
+  border-top: 2px solid var(--line);
+  border-bottom: none;
+  margin-top: 4px;
+  padding-top: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ---------- bundles ---------- */
+.bundle-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.bundle-row:last-child { margin-bottom: 0; }
+
+.bundle-row:hover { background: var(--pink-soft); }
+
+.bundle-row:has(input:checked) {
+  border-color: var(--pink);
+  background: var(--pink-soft);
+}
+
+.bundle-row input {
+  margin-top: 3px;
+  accent-color: var(--pink);
+  width: 15px;
+  height: 15px;
+}
+
+.bundle-row .b-title { font-weight: 600; }
+
+.bundle-row .b-price { color: var(--muted); }
+
+.muted { color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+/* ---------- button + fine print ---------- */
+.btn {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 12px 12px 0;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: var(--pink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.btn:hover { filter: brightness(0.96); }
+.btn:active { transform: scale(0.99); }
+
+.fine {
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 10px 16px 0;
+}
+
+/* ---------- empty state ---------- */
+#empty {
+  text-align: center;
+  padding: 40px 28px;
+}
+
+.empty-art { font-size: 52px; margin-bottom: 12px; }
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+</style>
+  <style>
+    /* Preview-only framing: centers the 360px popup on a soft backdrop.
+       None of this ships in the extension. */
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 14px; padding: 28px 12px 40px; box-sizing: border-box;
+      background: #f6f1ea;
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    #app {
+      width: 360px; max-width: 94vw;
+      background: #fffdf9;
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(90, 55, 20, .18), 0 2px 8px rgba(90, 55, 20, .10);
+      overflow: hidden;
+    }
+    .preview-note { color: #8a7a68; font-size: 12.5px; text-align: center; max-width: 360px; line-height: 1.5; }
+    .preview-note b { color: #6d5c49; }
+  </style>
+  <script>
+    /* Preview shim: stands in for the extension's chrome.storage and feeds
+       the popup one demo product, the way the content script would after
+       detecting a product on a retailer page. */
+    window.chrome = {
+      storage: {
+        local: {
+          get: function (key, cb) {
+            cb({
+              gm_product: {
+                merchant: "sephora",
+                title: "Dyson Airwrap™ Multi-Styler Complete Long",
+                price: 599.99,
+                url: "https://www.sephora.com/product/dyson-airwrap-multi-styler-complete-long-P505976",
+                detectedAt: Date.now()
+              }
+            });
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="brand">
+        <span class="logo">🧮</span>
+        <div class="brand-text">
+          <h1>girl math</h1>
+          <p>shopping, justified</p>
+        </div>
+      </div>
+      <span class="proto">proto</span>
+    </header>
+
+    <div id="empty" hidden>
+      <div class="empty-art">🛍️</div>
+      <p class="empty-title">No product detected yet</p>
+      <p class="muted">Open a product page on Amazon, Best&nbsp;Buy, Target, Nike, or Sephora — then click the extension icon.</p>
+    </div>
+
+    <div id="main" hidden>
+      <section class="card result">
+        <div class="result-label" id="r-label">girl math price</div>
+        <div class="result-price" id="r-price"></div>
+        <div class="result-sub" id="r-sub"></div>
+      </section>
+
+      <section class="card product">
+        <div class="product-title" id="p-title"></div>
+        <div class="product-meta">
+          <span class="merchant-chip" id="p-merchant"></span>
+          <span class="price" id="p-price"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>how it adds up</h2>
+        <div id="lines"></div>
+      </section>
+
+      <section class="card">
+        <h2>bundle it <span class="hint">optional</span></h2>
+        <div id="bundles"></div>
+      </section>
+
+      <button id="copy" class="btn">copy receipt</button>
+      <p class="fine" id="fine"></p>
+    </div>
+  </div>
+
+  <script>
+/* ------------------------------------------------------------------
+ * Girl Math — deal database (Phase 0: hardcoded)
+ *
+ * Phase 1 replaces this file's contents with ingestion from affiliate
+ * network APIs (Impact, CJ, Rakuten Advertising). Keep the schema:
+ *
+ * promo: {
+ *   id,            // stable id, e.g. "nike:WELCOME10"
+ *   kind,          // "code" | "cashback" | "sale"
+ *   code,          // the literal code, if kind === "code"
+ *   label,         // human-readable, shown in the math panel
+ *   valueType,     // "percent" | "fixed"
+ *   value,         // number: 10 means 10% or $10
+ *   stackable,     // false = cannot combine with other promos
+ *   exclusions,    // plain-English caveat, shown in the receipt
+ *   expiresAt      // ISO date string
+ * }
+ *
+ * bundlePool entries are complementary products with an active deal.
+ * The math engine picks one whose savings help push the original item
+ * to $0. In Phase 1 these come from affiliate product feeds filtered
+ * by active promos.
+ * ------------------------------------------------------------------ */
+
+const GIRL_MATH_DEALS = {
+  merchants: {
+    amazon: {
+      displayName: "Amazon",
+      promos: [
+        {
+          id: "amazon:WELCOME10",
+          kind: "code",
+          code: "WELCOME10",
+          label: "10% off coupon",
+          valueType: "percent",
+          value: 10,
+          stackable: true,
+          exclusions: "One code per order",
+          expiresAt: "2026-12-31",
+        },
+        {
+          id: "amazon:CASHBACK5",
+          kind: "cashback",
+          label: "Girl Math cashback",
+          valueType: "percent",
+          value: 5,
+          stackable: true,
+          exclusions: "Paid on net price after codes, 60 days",
+          expiresAt: "2026-12-31",
+        },
+      ],
+      bundlePool: [
+        {
+          id: "amazon:bundle:case",
+          title: "Phone case",
+          price: 45.0,
+          dealLabel: "40% off today",
+          valueType: "percent",
+          value: 40,
+        },
+        {
+          id: "amazon:bundle:cable",
+          title: "Braided USB-C cable 2-pack",
+          price: 18.0,
+          dealLabel: "$6 off coupon",
+          valueType: "fixed",
+          value: 6,
+        },
+        {
+          id: "amazon:bundle:tablet",
+          title: "Refurbished tablet (you've been eyeing it)",
+          price: 250.0,
+          dealLabel: "45% off refurb sale",
+          valueType: "percent",
+          value: 45,
+        },
+      ],
+    },
+
+    bestbuy: {
+      displayName: "Best Buy",
+      promos: [
+        {
+          id: "bestbuy:STUDENT10",
+          kind: "code",
+          code: "STUDENT10",
+          label: "10% student discount",
+          valueType: "percent",
+          value: 10,
+          stackable: true,
+          exclusions: "Verified student account required",
+          expiresAt: "2026-12-31",
+        },
+        {
+          id: "bestbuy:CASHBACK8",
+          kind: "cashback",
+          label: "Girl Math cashback",
+          valueType: "percent",
+          value: 8,
+          stackable: true,
+          exclusions: "Paid on net price after codes, 60 days",
+          expiresAt: "2026-12-31",
+        },
+      ],
+      bundlePool: [
+        {
+          id: "bestbuy:bundle:mouse",
+          title: "Wireless mouse",
+          price: 39.99,
+          dealLabel: "Open-box: 30% off",
+          valueType: "percent",
+          value: 30,
+        },
+      ],
+    },
+
+    target: {
+      displayName: "Target",
+      promos: [
+        {
+          id: "target:CIRCLE5",
+          kind: "code",
+          code: "CIRCLE5",
+          label: "5% Circle offer",
+          valueType: "percent",
+          value: 5,
+          stackable: true,
+          exclusions: "Target Circle membership, one offer per order",
+          expiresAt: "2026-12-31",
+        },
+        {
+          id: "target:CASHBACK6",
+          kind: "cashback",
+          label: "Girl Math cashback",
+          valueType: "percent",
+          value: 6,
+          stackable: true,
+          exclusions: "Paid on net price after codes, 60 days",
+          expiresAt: "2026-12-31",
+        },
+      ],
+      bundlePool: [
+        {
+          id: "target:bundle:candle",
+          title: "Scented candle",
+          price: 15.0,
+          dealLabel: "Buy 2 get 1 free (~33% off)",
+          valueType: "percent",
+          value: 33,
+        },
+      ],
+    },
+
+    nike: {
+      displayName: "Nike",
+      promos: [
+        {
+          id: "nike:MEMBER15",
+          kind: "code",
+          code: "MEMBER15",
+          label: "15% Nike Membership code",
+          valueType: "percent",
+          value: 15,
+          stackable: false,
+          exclusions: "Excludes sale items; cannot combine with other codes",
+          expiresAt: "2026-12-31",
+        },
+        {
+          id: "nike:CASHBACK10",
+          kind: "cashback",
+          label: "Girl Math cashback",
+          valueType: "percent",
+          value: 10,
+          stackable: true,
+          exclusions: "Paid on net price after codes, 60 days",
+          expiresAt: "2026-12-31",
+        },
+      ],
+      bundlePool: [
+        {
+          id: "nike:bundle:socks",
+          title: "Crew socks 3-pack",
+          price: 22.0,
+          dealLabel: "25% off socks",
+          valueType: "percent",
+          value: 25,
+        },
+      ],
+    },
+
+    sephora: {
+      displayName: "Sephora",
+      promos: [
+        {
+          id: "sephora:BEAUTY20",
+          kind: "code",
+          code: "BEAUTY20",
+          label: "20% off sitewide event",
+          valueType: "percent",
+          value: 20,
+          stackable: true,
+          exclusions: "Rouge members; one code per order",
+          expiresAt: "2026-12-31",
+        },
+        {
+          id: "sephora:CASHBACK7",
+          kind: "cashback",
+          label: "Girl Math cashback",
+          valueType: "percent",
+          value: 7,
+          stackable: true,
+          exclusions: "Paid on net price after codes, 60 days",
+          expiresAt: "2026-12-31",
+        },
+      ],
+      bundlePool: [
+        {
+          id: "sephora:bundle:mask",
+          title: "Sheet mask set",
+          price: 28.0,
+          dealLabel: "30% off minis",
+          valueType: "percent",
+          value: 30,
+        },
+      ],
+    },
+  },
+};
+
+// Hostname -> merchant key. Add retailers here as the rules engine grows.
+const GIRL_MATH_HOSTS = {
+  "www.amazon.com": "amazon",
+  "www.bestbuy.com": "bestbuy",
+  "www.target.com": "target",
+  "www.nike.com": "nike",
+  "www.sephora.com": "sephora",
+};
+
+</script>
+  <script>
+/* ------------------------------------------------------------------
+ * Girl Math — popup math engine + UI (Phase 0)
+ *
+ * Girl-math rule: totalSavings = code + cashback + bundleDealSavings.
+ * girlPrice = max(0, itemPrice - totalSavings). If it hits 0, the item
+ * is FREE* (*you still bought the bundle — that's the joke).
+ *
+ * Stacking policy (Phase 0, realistic defaults):
+ *  - one promo code per order (the best one wins)
+ *  - one cashback portal per order (the best rate wins, on net price)
+ *  - one bundle item (radio select)
+ * Phase 1 replaces this with the per-retailer rules table.
+ * ------------------------------------------------------------------ */
+(() => {
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  const money = (n) => "$" + n.toFixed(2);
+  const esc = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[c]));
+
+  function savingOf(promo, price) {
+    if (promo.valueType === "percent") return (price * promo.value) / 100;
+    return Math.min(promo.value, price);
+  }
+
+  function livePromos(merchantDeals) {
+    const now = new Date();
+    return merchantDeals.promos.filter((p) => new Date(p.expiresAt) >= now);
+  }
+
+  function compute(product, md, bundleId) {
+    const promos = livePromos(md);
+
+    // Best single code (one code per order — realistic).
+    const codes = promos
+      .filter((p) => p.kind === "code")
+      .sort((a, b) => savingOf(b, product.price) - savingOf(a, product.price));
+    const code = codes[0] || null;
+    const codeSaving = code ? savingOf(code, product.price) : 0;
+
+    // Best cashback rate, applied to net price after the code.
+    const net = product.price - codeSaving;
+    const cashbacks = promos
+      .filter((p) => p.kind === "cashback")
+      .sort((a, b) => b.value - a.value);
+    const cashback = cashbacks[0] || null;
+    const cashbackSaving = cashback ? (net * cashback.value) / 100 : 0;
+
+    // Optional bundle item.
+    const bundle = bundleId
+      ? md.bundlePool.find((b) => b.id === bundleId) || null
+      : null;
+    const bundleSaving = bundle ? savingOf(bundle, bundle.price) : 0;
+    const bundleCost = bundle ? bundle.price - bundleSaving : 0;
+
+    const totalSaving = codeSaving + cashbackSaving + bundleSaving;
+    const girlPrice = Math.max(0, product.price - totalSaving);
+    const outOfPocket = girlPrice + bundleCost;
+    const itemCount = bundle ? 2 : 1;
+
+    const lines = [];
+    if (code)
+      lines.push({
+        kind: "code",
+        chip: "promo",
+        label: code.label,
+        sub: code.exclusions || `apply ${code.code}`,
+        amount: codeSaving,
+        note: code.exclusions,
+      });
+    if (cashback)
+      lines.push({
+        kind: "cashback",
+        chip: "cashback",
+        label: cashback.label,
+        sub: cashback.exclusions || "via cashback portal",
+        amount: cashbackSaving,
+        note: cashback.exclusions,
+      });
+    if (bundle)
+      lines.push({
+        kind: "bundle",
+        chip: "bundle",
+        label: `Bundle: ${bundle.title}`,
+        sub: `${bundle.dealLabel} · you pay ${money(bundleCost)}`,
+        amount: bundleSaving,
+        note: `You pay ${money(bundleCost)} for it`,
+      });
+
+    return {
+      code,
+      cashback,
+      bundle,
+      lines,
+      totalSaving,
+      girlPrice,
+      outOfPocket,
+      itemCount,
+      isFree: girlPrice === 0,
+    };
+  }
+
+  function receiptText(product, md, r) {
+    const L = [];
+    L.push("🧮 GIRL MATH RECEIPT");
+    L.push(`${product.title} — ${money(product.price)} (${md.displayName})`);
+    L.push("------------------------------");
+    for (const ln of r.lines) L.push(`- ${ln.label}: -${money(ln.amount)}`);
+    L.push("------------------------------");
+    L.push(`Total savings: ${money(r.totalSaving)}`);
+    if (r.isFree) {
+      L.push(`Girl math price: $0.00 — IT'S FREE*`);
+      L.push(`*you bought ${r.itemCount} things and paid ${money(r.outOfPocket)}`);
+    } else {
+      L.push(`Girl math price: ${money(r.girlPrice)}`);
+      L.push(`Out of pocket (${r.itemCount} items): ${money(r.outOfPocket)}`);
+    }
+    return L.join("\n");
+  }
+
+  function render(product) {
+    const md = GIRL_MATH_DEALS.merchants[product.merchant];
+    if (!md) {
+      $("empty").hidden = false;
+      return;
+    }
+    $("empty").hidden = true;
+    $("main").hidden = false;
+
+    $("p-title").textContent = product.title;
+    $("p-merchant").textContent = md.displayName;
+    $("p-price").textContent = money(product.price);
+
+    // Bundle radio list (rebuilt each render; keeps selection).
+    const bundlesEl = $("bundles");
+    const prevSel = document.querySelector('input[name="bundle"]:checked');
+    const prevId = prevSel ? prevSel.value : "";
+    bundlesEl.innerHTML = "";
+    const none = document.createElement("label");
+    none.className = "bundle-row";
+    none.innerHTML = `<input type="radio" name="bundle" value="" ${
+      !prevId ? "checked" : ""
+    } /> <span>no bundle — just the deals</span>`;
+    bundlesEl.appendChild(none);
+    for (const b of md.bundlePool) {
+      const s = savingOf(b, b.price);
+      const row = document.createElement("label");
+      row.className = "bundle-row";
+      row.innerHTML =
+        `<input type="radio" name="bundle" value="${b.id}" ${
+          prevId === b.id ? "checked" : ""
+        } /> ` +
+        `<span><strong>${b.title}</strong> — ${money(b.price)}<br/>` +
+        `<span class="muted">${b.dealLabel} (saves ${money(s)})</span></span>`;
+      bundlesEl.appendChild(row);
+    }
+    bundlesEl.onchange = () => render(product);
+
+    const sel = document.querySelector('input[name="bundle"]:checked');
+    const r = compute(product, md, sel && sel.value ? sel.value : null);
+
+    const linesEl = $("lines");
+    linesEl.innerHTML = "";
+    const base = document.createElement("div");
+    base.className = "line";
+    base.innerHTML = `<span class="chip base">list price</span>
+      <span class="desc"><span class="main">${esc(
+        product.title.slice(0, 40)
+      )}</span></span>
+      <span class="num">${money(product.price)}</span>`;
+    linesEl.appendChild(base);
+    for (const ln of r.lines) {
+      const d = document.createElement("div");
+      d.className = "line saving";
+      d.innerHTML = `<span class="chip ${ln.kind}">${ln.chip}</span>
+        <span class="desc"><span class="main">${esc(ln.label)}</span>${
+        ln.sub ? `<span class="sub">${esc(ln.sub)}</span>` : ""
+      }</span>
+        <span class="num">−${money(ln.amount)}</span>`;
+      linesEl.appendChild(d);
+    }
+    const tot = document.createElement("div");
+    tot.className = "line total";
+    tot.innerHTML = `<span>Total savings</span><span class="num">−${money(
+      r.totalSaving
+    )}</span>`;
+    linesEl.appendChild(tot);
+
+    if (r.isFree) {
+      $("r-label").textContent = "girl math price";
+      $("r-price").textContent = "FREE*";
+      $("r-price").classList.add("free");
+      $("r-sub").textContent = `*you bought ${r.itemCount} things, paid ${money(
+        r.outOfPocket
+      )} total. The ${product.title.slice(0, 28)} was free.`;
+    } else {
+      $("r-label").textContent = "girl math price";
+      $("r-price").textContent = money(r.girlPrice);
+      $("r-price").classList.remove("free");
+      $("r-sub").textContent = `Out of pocket for ${r.itemCount} item(s): ${money(
+        r.outOfPocket
+      )}`;
+    }
+
+    const notes = r.lines.map((ln) => ln.note).filter(Boolean);
+    $("fine").textContent =
+      notes.length > 0
+        ? "Fine print: " + notes.join(" · ")
+        : "No deals found for this merchant yet.";
+
+    $("copy").onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(receiptText(product, md, r));
+        $("copy").textContent = "✅ copied!";
+        setTimeout(() => ($("copy").textContent = "📋 copy receipt"), 1500);
+      } catch {
+        $("copy").textContent = "copy failed — select manually";
+      }
+    };
+  }
+
+  chrome.storage.local.get("gm_product", ({ gm_product }) => {
+    if (gm_product && gm_product.price > 0) render(gm_product);
+    else $("empty").hidden = false;
+  });
+})();
+
+</script>
+  <p class="preview-note"><b>Redesign preview</b> — this is the current local redesign of the extension popup, running with a demo product (Sephora). The version on GitHub still has the old look.</p>
+</body>
+</html>

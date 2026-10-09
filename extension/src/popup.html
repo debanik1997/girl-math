@@ -6,41 +6,49 @@
 </head>
 <body>
   <div id="app">
-    <header>
-      <span class="logo">🧮</span>
-      <h1>girl math</h1>
+    <header class="top">
+      <div class="brand">
+        <span class="logo">🧮</span>
+        <div class="brand-text">
+          <h1>girl math</h1>
+          <p>shopping, justified</p>
+        </div>
+      </div>
       <span class="proto">proto</span>
     </header>
 
     <div id="empty" hidden>
-      <p class="empty-emoji">🛒</p>
-      <p>No product detected yet.</p>
-      <p class="muted">Open a product page on Amazon, Best&nbsp;Buy, Target, Nike, or Sephora, then click the extension icon.</p>
+      <div class="empty-art">🛍️</div>
+      <p class="empty-title">No product detected yet</p>
+      <p class="muted">Open a product page on Amazon, Best&nbsp;Buy, Target, Nike, or Sephora — then click the extension icon.</p>
     </div>
 
     <div id="main" hidden>
-      <section class="product card">
-        <div class="product-title" id="p-title"></div>
-        <div class="product-meta"><span id="p-merchant"></span> · <span id="p-price"></span></div>
-      </section>
-
-      <section class="card">
-        <h2>the math</h2>
-        <div id="lines"></div>
-      </section>
-
-      <section class="card">
-        <h2>bundle it <span class="hint">(optional)</span></h2>
-        <div id="bundles"></div>
-      </section>
-
       <section class="card result">
-        <div class="result-label" id="r-label"></div>
+        <div class="result-label" id="r-label">girl math price</div>
         <div class="result-price" id="r-price"></div>
         <div class="result-sub" id="r-sub"></div>
       </section>
 
-      <button id="copy">📋 copy receipt</button>
+      <section class="card product">
+        <div class="product-title" id="p-title"></div>
+        <div class="product-meta">
+          <span class="merchant-chip" id="p-merchant"></span>
+          <span class="price" id="p-price"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>how it adds up</h2>
+        <div id="lines"></div>
+      </section>
+
+      <section class="card">
+        <h2>bundle it <span class="hint">optional</span></h2>
+        <div id="bundles"></div>
+      </section>
+
+      <button id="copy" class="btn">copy receipt</button>
       <p class="fine" id="fine"></p>
     </div>
   </div>

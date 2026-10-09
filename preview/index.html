@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>girl math — redesign preview</title>
+  <link rel="stylesheet" href="popup.css" />
+  <style>
+    /* Preview-only framing: centers the 360px popup on a soft backdrop.
+       None of this ships in the extension. */
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 14px; padding: 28px 12px 40px; box-sizing: border-box;
+      background: #f6f1ea;
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    #app {
+      width: 360px; max-width: 94vw;
+      background: #fffdf9;
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(90, 55, 20, .18), 0 2px 8px rgba(90, 55, 20, .10);
+      overflow: hidden;
+    }
+    .preview-note { color: #8a7a68; font-size: 12.5px; text-align: center; max-width: 360px; line-height: 1.5; }
+    .preview-note b { color: #6d5c49; }
+  </style>
+  <script>
+    /* Preview shim: stands in for the extension's chrome.storage and feeds
+       the popup one demo product, the way the content script would after
+       detecting a product on a retailer page. */
+    window.chrome = {
+      storage: {
+        local: {
+          get: function (key, cb) {
+            cb({
+              gm_product: {
+                merchant: "sephora",
+                title: "Dyson Airwrap™ Multi-Styler Complete Long",
+                price: 599.99,
+                url: "https://www.sephora.com/product/dyson-airwrap-multi-styler-complete-long-P505976",
+                detectedAt: Date.now()
+              }
+            });
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="brand">
+        <span class="logo">🧮</span>
+        <div class="brand-text">
+          <h1>girl math</h1>
+          <p>shopping, justified</p>
+        </div>
+      </div>
+      <span class="proto">proto</span>
+    </header>
+
+    <div id="empty" hidden>
+      <div class="empty-art">🛍️</div>
+      <p class="empty-title">No product detected yet</p>
+      <p class="muted">Open a product page on Amazon, Best&nbsp;Buy, Target, Nike, or Sephora — then click the extension icon.</p>
+    </div>
+
+    <div id="main" hidden>
+      <section class="card result">
+        <div class="result-label" id="r-label">girl math price</div>
+        <div class="result-price" id="r-price"></div>
+        <div class="result-sub" id="r-sub"></div>
+      </section>
+
+      <section class="card product">
+        <div class="product-title" id="p-title"></div>
+        <div class="product-meta">
+          <span class="merchant-chip" id="p-merchant"></span>
+          <span class="price" id="p-price"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>how it adds up</h2>
+        <div id="lines"></div>
+      </section>
+
+      <section class="card">
+        <h2>bundle it <span class="hint">optional</span></h2>
+        <div id="bundles"></div>
+      </section>
+
+      <button id="copy" class="btn">copy receipt</button>
+      <p class="fine" id="fine"></p>
+    </div>
+  </div>
+
+  <script src="deals.js"></script>
+  <script src="popup.js"></script>
+  <p class="preview-note"><b>Redesign preview</b> — this is the current local redesign of the extension popup, running with a demo product (Sephora). The version on GitHub still has the old look.</p>
+</body>
+</html>
